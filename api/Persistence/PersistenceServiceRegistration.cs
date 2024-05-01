@@ -1,4 +1,4 @@
-﻿using FeedbackAnalyzer.Application.Contracts.Persistence;
+﻿using Diploma.Application.Contracts.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence.Repositories;
 
@@ -10,7 +10,7 @@ public static class PersistenceServiceRegistration
     {
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ICandidateRepository, CandidateRepository>();
         
         return services;
     }

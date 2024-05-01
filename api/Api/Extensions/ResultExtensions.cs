@@ -1,6 +1,6 @@
-﻿using FeedbackAnalyzer.Application.Shared;
+﻿using Diploma.Application.Shared;
 
-namespace FeedbackAnalyzer.Api.Extensions;
+namespace Diploma.Api.Extensions;
 
 public static class ResultExtensions
 {

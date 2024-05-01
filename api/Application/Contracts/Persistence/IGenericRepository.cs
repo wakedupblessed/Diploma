@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
-using FeedbackAnalyzer.Domain.Common;
+using Diploma.Domain.Common;
 
-namespace FeedbackAnalyzer.Application.Contracts.Persistence;
+namespace Diploma.Application.Contracts.Persistence;
 
 public interface IGenericRepository<TEntity> where TEntity : BaseEntity
 {

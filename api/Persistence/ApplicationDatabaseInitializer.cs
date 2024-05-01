@@ -1,4 +1,4 @@
-﻿using FeedbackAnalyzer.Domain;
+﻿using Diploma.Domain;
 using Identity.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,17 +25,17 @@ public static class ApplicationDatabaseInitializer
     {
         if (applicationUser is not null)
         {
-            if (applicationContext.Users.FirstOrDefault(u => applicationUser.Id == u.IdentityId) is null)
+            if (applicationContext.Candidates.FirstOrDefault(u => applicationUser.Id == u.IdentityId) is null)
             {
-                var user = new User
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    IdentityId = applicationUser.Id,
-                    FullName = applicationUser.FullName
-                };
-
-                applicationContext.Users.Add(user);
-                await applicationContext.SaveChangesAsync();
+                // var user = new Employee
+                // {
+                //     Id = Guid.NewGuid().ToString(),
+                //     IdentityId = applicationUser.Id,
+                //     FullName = applicationUser.FullName
+                // };
+                //
+                // applicationContext.Users.Add(user);
+                // await applicationContext.SaveChangesAsync();
             }
         }
     }

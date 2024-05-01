@@ -1,11 +1,11 @@
-﻿using FeedbackAnalyzer.Application.Shared;
-using FeedbackAnalyzer.Application.Shared.EntityErrors;
+﻿using Diploma.Application.Shared;
+using Diploma.Application.Shared.EntityErrors;
 using FluentValidation;
 using Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace FeedbackAnalyzer.Application.Features.Identity.Register;
+namespace Diploma.Application.Features.Identity.Register;
 
 public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 {

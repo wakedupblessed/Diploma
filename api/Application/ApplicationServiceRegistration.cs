@@ -2,7 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FeedbackAnalyzer.Application;
+namespace Diploma.Application;
 
 public static class ApplicationServiceRegistration
 {

@@ -1,7 +1,7 @@
-using FeedbackAnalyzer.Api.Endpoints;
-using FeedbackAnalyzer.Api.Middleware;
-using FeedbackAnalyzer.Api.OptionsSetup;
-using FeedbackAnalyzer.Application;
+using Diploma.Api.Endpoints;
+using Diploma.Api.Middleware;
+using Diploma.Api.OptionsSetup;
+using Diploma.Application;
 using Identity;
 using Identity.DbContext;
 using Identity.Models;
@@ -68,6 +68,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
 builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
+builder.Services.ConfigureOptions<SvmPredictionOptionsSetup>();
 
 builder.Services
     .AddAuthentication(options =>

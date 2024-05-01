@@ -1,24 +1,24 @@
 ﻿using AutoMapper;
-using FeedbackAnalyzer.Application.Contracts.Persistence;
-using FeedbackAnalyzer.Application.Shared;
+using Diploma.Application.Contracts.Persistence;
+using Diploma.Application.Shared;
 using FluentValidation;
 using Identity.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace FeedbackAnalyzer.Application.Features.Identity.Register;
+namespace Diploma.Application.Features.Identity.Register;
 
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<Unit>>
 {
     private readonly IValidator<RegisterCommand> _validator;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IUserRepository _userRepository;
+    private readonly ICandidateRepository _candidateRepository;
     private readonly IMapper _mapper;
 
-    public RegisterCommandHandler(IUserRepository userRepository, UserManager<ApplicationUser> userManager,
+    public RegisterCommandHandler(ICandidateRepository candidateRepository, UserManager<ApplicationUser> userManager,
         IValidator<RegisterCommand> validator, IMapper mapper)
     {
-        _userRepository = userRepository;
+        _candidateRepository = candidateRepository;
         _userManager = userManager;
         _validator = validator;
         _mapper = mapper;
@@ -39,9 +39,9 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<Un
 
         if (creationResult.Succeeded)
         {
-            var user = _mapper.Map<Domain.User>(identityUser);
+            var user = _mapper.Map<Domain.Candidate>(identityUser);
 
-            await _userRepository.CreateAsync(user);
+            await _candidateRepository.CreateAsync(user);
             
             return Unit.Value;
         }

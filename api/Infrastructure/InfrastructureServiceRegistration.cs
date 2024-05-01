@@ -1,4 +1,4 @@
-﻿using FeedbackAnalyzer.Application.Contracts.Services;
+﻿using Diploma.Application.Contracts.Services;
 using Infrastructure.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,4 +1,4 @@
-﻿namespace FeedbackAnalyzer.Application.Shared;
+﻿namespace Diploma.Application.Shared;
 
 public class Result<TValue>
 {

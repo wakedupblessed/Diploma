@@ -1,7 +1,7 @@
-﻿using FeedbackAnalyzer.Application.Shared;
+﻿using Diploma.Application.Shared;
 using FluentValidation;
 
-namespace FeedbackAnalyzer.Application.Features.Identity.Login;
+namespace Diploma.Application.Features.Identity.Login;
 
 public class LoginCommandValidator : AbstractValidator<LoginCommand>
 {

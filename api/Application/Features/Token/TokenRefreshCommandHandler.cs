@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using FeedbackAnalyzer.Application.Contracts.Services;
-using FeedbackAnalyzer.Application.Shared;
+using Diploma.Application.Contracts.Services;
+using Diploma.Application.Shared;
 using Identity.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace FeedbackAnalyzer.Application.Features.Token;
+namespace Diploma.Application.Features.Token;
 
 public class TokenRefreshCommandHandler : IRequestHandler<TokenRefreshCommand, Result<TokenDto>>
 {

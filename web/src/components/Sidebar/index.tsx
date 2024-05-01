@@ -23,7 +23,7 @@ const Sidebar = () => {
           <UserStatistic />
         </StatisticContainer>
         <SLinks>
-          <Link label="Articles" route="/" />
+          <Link label="Vacancy`s" route="/" />
           {user && (
             <>
               <Link label="Create article" route="/articles/create" />

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FeedbackAnalyzer.Application.Shared;
+namespace Diploma.Application.Shared;
 
 public sealed record Error
 {

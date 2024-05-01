@@ -1,4 +1,4 @@
-﻿namespace FeedbackAnalyzer.Application.Shared.EntityErrors;
+﻿namespace Diploma.Application.Shared.EntityErrors;
 
 public static class UserErrors
 {

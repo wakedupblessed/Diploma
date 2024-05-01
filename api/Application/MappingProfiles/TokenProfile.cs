@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using FeedbackAnalyzer.Application.Features.Token;
+using Diploma.Application.Features.Token;
 
-namespace FeedbackAnalyzer.Application.MappingProfiles;
+namespace Diploma.Application.MappingProfiles;
 
 public class TokenProfile : Profile
 {

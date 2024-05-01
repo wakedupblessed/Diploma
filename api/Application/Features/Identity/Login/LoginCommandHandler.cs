@@ -1,13 +1,13 @@
-﻿using FeedbackAnalyzer.Application.Contracts.Services;
-using FeedbackAnalyzer.Application.Features.Token;
-using FeedbackAnalyzer.Application.Shared;
-using FeedbackAnalyzer.Application.Shared.EntityErrors;
+﻿using Diploma.Application.Contracts.Services;
+using Diploma.Application.Features.Token;
+using Diploma.Application.Shared;
+using Diploma.Application.Shared.EntityErrors;
 using FluentValidation;
 using Identity.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace FeedbackAnalyzer.Application.Features.Identity.Login;
+namespace Diploma.Application.Features.Identity.Login;
 
 public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<TokenDto>>
 {

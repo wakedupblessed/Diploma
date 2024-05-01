@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
-using FeedbackAnalyzer.Application.Contracts.Persistence;
-using FeedbackAnalyzer.Domain.Common;
+using Diploma.Application.Contracts.Persistence;
+using Diploma.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Persistence.DbContext;
 

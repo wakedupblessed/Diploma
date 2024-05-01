@@ -1,7 +1,7 @@
 ﻿using Infrastructure.Authentication;
 using Microsoft.Extensions.Options;
 
-namespace FeedbackAnalyzer.Api.OptionsSetup;
+namespace Diploma.Api.OptionsSetup;
 
 public class JwtOptionsSetup : IConfigureOptions<JwtOptions>
 {

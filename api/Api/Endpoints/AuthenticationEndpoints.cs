@@ -1,11 +1,11 @@
-﻿using FeedbackAnalyzer.Api.Extensions;
-using FeedbackAnalyzer.Application.Features.Identity.Login;
-using FeedbackAnalyzer.Application.Features.Identity.Register;
-using FeedbackAnalyzer.Application.Features.Token;
+﻿using Diploma.Application.Features.Identity.Login;
+using Diploma.Application.Features.Identity.Register;
+using Diploma.Application.Features.Token;
+using Diploma.Api.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 
-namespace FeedbackAnalyzer.Api.Endpoints;
+namespace Diploma.Api.Endpoints;
 
 public static class AuthenticationEndpoints
 {

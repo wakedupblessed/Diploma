@@ -1,4 +1,4 @@
-﻿namespace FeedbackAnalyzer.Domain.Common;
+﻿namespace Diploma.Domain.Common;
 
 public abstract class BaseEntity
 {

@@ -1,12 +1,13 @@
+import random
+
 import numpy as np
-from datetime import datetime
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import MinMaxScaler
+
 from data import *
 
 
 def dict_to_dto(data):
-    return JobDTO(
+    return SvmDTO(
         salary_expectation=data["salary_expectation"],
         city=data["city"],
         required_experience_years=data["experience_years"],
@@ -17,30 +18,98 @@ def dict_to_dto(data):
     )
 
 
-def dto_to_features(dto, job_dto):
-    language_levels = {"A1": 1, "A2": 2, "B1": 3, "B2": 4, "C1": 5, "C2": 6}
+def build_feature_index(candidates, job):
+    all_skills = set()
+    all_languages = set()
+    all_certificates = set()
 
-    city_feature = [1 if dto.city == job_dto.city else 0]
+    # Collect skills, languages, and certificates from candidates
+    for candidate in candidates:
+        all_skills.update(candidate.required_skills.keys())
+        all_languages.update(candidate.language_requirements.keys())
+        all_certificates.update(candidate.certificates)
 
-    features = [
-                   dto.salary_expectation,
-                   dto.required_experience_years,
-                   dto.required_skills['programming'],
-                   dto.required_skills['data_analysis'],
-                   dto.required_skills['machine_learning'],
-                   dto.publications_required
-               ] + city_feature
+    # Also add job description skills, languages, and certificates
+    all_skills.update(job.required_skills.keys())
+    all_languages.update(job.language_requirements.keys())
+    all_certificates.update(job.certificates)
 
-    # Language features
-    language_features = []
-    for lang in ['English', 'German', 'French', 'Spanish']:  # Add other languages as needed
-        language_features.append(language_levels.get(dto.language_requirements.get(lang, 'A1'), 0))
+    # Create index maps for dynamic features
+    skill_index = {skill: i for i, skill in enumerate(sorted(all_skills))}
+    language_index = {lang: len(skill_index) + i for i, lang in enumerate(sorted(all_languages))}
+    certificate_index = {cert: len(skill_index) + len(language_index) + i for i, cert in enumerate(sorted(all_certificates))}
 
-    certificate_score_feature = [certificate_score(dto.certificates, job_dto.certificates)]
+    return skill_index, language_index, certificate_index
 
-    # Combine all features into one list
-    return features + language_features + certificate_score_feature
 
+def dto_to_features(dto, job_dto, weights, skill_index, language_index, certificate_index):
+    total_features = len(skill_index) + len(language_index) + len(certificate_index) + 4  # +4 for the new features
+    features = np.zeros(total_features)
+
+    # Encoding Skills
+    for skill, level in dto.required_skills.items():
+        if skill in skill_index:
+            idx = skill_index[skill]
+            features[idx] = level * weights[idx]
+
+    # Encoding Languages
+    for lang, proficiency in dto.language_requirements.items():
+        if lang in language_index:
+            idx = language_index[lang]
+            level = {"A1": 1, "A2": 2, "B1": 3, "B2": 4, "C1": 5, "C2": 6}.get(proficiency, 0)
+            features[idx] = level * weights[idx]
+
+    # Encoding Certificates
+    for cert in dto.certificates:
+        if cert in certificate_index:
+            idx = certificate_index[cert]
+            features[idx] = 1 * weights[idx]
+
+    # Additional features: index from the end of the previous features
+    features[-4] = dto.salary_expectation
+    features[-3] = hash(dto.city) % 1000  # Example of a simple hash encoding for city
+    features[-2] = dto.required_experience_years
+    features[-1] = dto.publications_required
+
+    return features
+
+
+additional_skills = ["web_development", "statistical_analysis", "deep_learning", "cloud_computing", "big_data"]
+additional_certificates = [
+    "Certified Python Programmer",
+    "Advanced Machine Learning Specialist",
+    "Big Data Analyst Certification",
+    "AWS Certified Solutions Architect",
+    "Certified Ethical Hacker",
+    "Google Cloud Professional Data Engineer"
+]
+
+
+def generate_candidates(base_list, num_variants=1):
+    new_candidates = []
+    for base in base_list:
+        for _ in range(num_variants):
+            # Randomly add new skills with random proficiency levels
+            skills_update = {skill: random.randint(1, 10) for skill in
+                             random.sample(additional_skills, random.randint(0, 3))}
+            skills_update.update(base["skills"])
+
+            # Randomly add new certificates, ensuring no duplicates
+            new_certs = random.sample(additional_certificates, random.randint(0, 2))
+            combined_certs = list(set(base["certificates"] + new_certs))
+
+            new_candidate = {
+                "name": base["name"],
+                "salary_expectation": base["salary_expectation"] + random.randint(-10000, 10000),
+                "city": random.choice(["Київ", "Одеса", "Львів", "Харків", "Дніпро"]),
+                "experience_years": base["experience_years"] + random.choice([-1, 0, 1]),
+                "skills": {k: max(1, v + random.choice([-1, 0, 1])) for k, v in skills_update.items()},
+                "languages": base["languages"],
+                "publications": base["publications"] + random.choice([-1, 0, 1]),
+                "certificates": combined_certs
+            }
+            new_candidates.append(new_candidate)
+    return new_candidates
 
 
 def scale_experience(experience):
@@ -53,48 +122,6 @@ def normalize_vector(vector):
     if norm == 0:
         return vector
     return vector / norm
-
-
-def calculate_decay(year):
-    current_year = datetime.now().year
-    years_since_certification = current_year - year
-    # Assuming a certification loses 10% of its initial relevance each year
-    decay_factor = max(0, 1 - 0.1 * years_since_certification)
-    return decay_factor
-
-
-def create_skill_vector(skills_info, mandatory_skills):
-    skill_levels = []
-    skill_weights = []
-    for skill_details in skills_info:
-        skill_name = skill_details["name"]
-        skill_level = skill_details["level"]
-        weight = 1.5 if skill_name in mandatory_skills else 1.0
-        skill_levels.append(skill_level)
-        skill_weights.append(weight)
-    return np.array(skill_levels) * np.array(skill_weights)
-
-
-def create_job_skill_vector(candidate_skills_info, mandatory_skills, optional_skill_value=1):
-    job_skills = []
-    for skill_details in candidate_skills_info:
-        if skill_details['name'] in mandatory_skills:
-            job_skills.append(10)  # Mandatory skills get the highest value
-        else:
-            job_skills.append(optional_skill_value) # Optional skills get a lower value as a small bonus
-
-    return np.array(job_skills)
-
-
-def create_certification_vector(certifications):
-    return np.array([calculate_decay(int(cert["date"][:4])) for cert in certifications])
-
-
-def calculate_years_experience(start, end, role_weight):
-    start_date = datetime.strptime(start, "%Y-%m")
-    end_date = datetime.strptime(end, "%Y-%m")
-    years = (end_date.year - start_date.year) + ((end_date.month - start_date.month) / 12)
-    return years * role_weight
 
 
 def certificate_score(candidate_certs, job_certs):

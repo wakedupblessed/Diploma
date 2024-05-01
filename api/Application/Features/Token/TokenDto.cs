@@ -1,4 +1,4 @@
-﻿namespace FeedbackAnalyzer.Application.Features.Token;
+﻿namespace Diploma.Application.Features.Token;
 
 public record TokenDto(string AccessToken, string RefreshToken);
 
