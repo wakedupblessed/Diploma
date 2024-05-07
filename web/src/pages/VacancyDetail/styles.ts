@@ -88,7 +88,6 @@ const Experience = styled.div`
 `;
 
 const CandidatesContainer = styled.div`
-  border: 1px solid #ccc;
   grid-column: 3 / -1;
 `;
 
