@@ -9,6 +9,7 @@ public class VacancySvmDto
     public string City { get; set; }  
     public int ExperienceYears { get; set; }
     public List<SkillSvmDto> Skills { get; set; } = new();
+    public EducationSvmDTO Education { get; set; }
     public List<LanguageSkillSvmDto> LanguageSkills { get; set; } = new();
     public int Publications { get; set; }
     public List<string> Certificates { get; set; } = new();

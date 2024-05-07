@@ -2,26 +2,27 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import {
-  ArticleCard,
+  VacancyCard,
   Container,
   AuthorName,
-  ArticleTitle,
-  ArticleMetadata,
+  VacancyDescription,
+  VacancyTitle,
+  VacancyMetadata,
 } from "./styles";
 
-import { ArticleDto, getArticles } from "../../api/articles";
+import { VacancyDTO, getVacancies } from "../../api/vacancy";
 import { getFormatedDate } from "../../utils/date";
 
-const ArticlesList = () => {
+const VacancyList = () => {
   const navigate = useNavigate();
-  const [articles, setArticles] = useState<ArticleDto[] | null>(null);
+  const [vacancies, setVacancies] = useState<VacancyDTO[] | null>(null);
 
   useEffect(() => {
     async function getResponse() {
-      const result = await getArticles();
+      const result = await getVacancies();
 
       if (result) {
-        setArticles(result as ArticleDto[]);
+        setVacancies(result as VacancyDTO[]);
       }
     }
 
@@ -30,21 +31,32 @@ const ArticlesList = () => {
 
   return (
     <Container>
-      {articles &&
-        articles.map(art => {
+      {vacancies &&
+        vacancies.map(art => {
           return (
-            <ArticleCard
-              onClick={() => navigate(`/articles/${art.id}`)}
-              key={`article-${art.id}`}
+            <VacancyCard
+              onClick={() => navigate(`/vacancies/${art.id}`)}
+              key={`Vacancy-${art.id}`}
             >
-              <AuthorName>{art.creator}</AuthorName>
-              <ArticleTitle>{art.title}</ArticleTitle>
-              <ArticleMetadata>{getFormatedDate(art.created)}</ArticleMetadata>
-            </ArticleCard>
+              <VacancyMetadata>0 - відгукнулось</VacancyMetadata>
+              <VacancyTitle>{art.jobTitle}</VacancyTitle>
+              <VacancyDescription>
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry's standard dummy
+                text ever since the 1500s, when an unknown printer took a galley
+                of type and scrambled it to make a type specimen book. It has
+                survived not only five centuries, but also the leap into
+                electronic typesetting, remaining essentially unchanged. It was
+                popularised in the 1960s with the release of Letraset sheets
+                containing Lorem Ipsum passages, and more recently with desktop
+                publishing software like Aldus PageMaker including versions of
+                Lorem Ipsum.
+              </VacancyDescription>
+            </VacancyCard>
           );
         })}
     </Container>
   );
 };
 
-export default ArticlesList;
+export default VacancyList;

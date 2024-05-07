@@ -1,8 +1,9 @@
 ﻿using Infrastructure.SvmPrediction;
+using Microsoft.Extensions.Options;
 
 namespace Diploma.Api.OptionsSetup;
 
-public class SvmPredictionOptionsSetup
+public class SvmPredictionOptionsSetup : IConfigureOptions<SvmPredictionOptions>
 {
     private const string SectionName = "SvmSettings";
 

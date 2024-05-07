@@ -101,10 +101,13 @@ public class ApplicationDatabaseContext : Microsoft.EntityFrameworkCore.DbContex
             .HasForeignKey(v => v.LocationId);
 
         modelBuilder.Entity<Vacancy>()
+            .HasOne(v => v.RequiredEducation);
+        
+        modelBuilder.Entity<Vacancy>()
             .HasMany(v => v.VacancySkills)
             .WithOne(vs => vs.Vacancy)
             .HasForeignKey(vs => vs.VacancyId);
-
+        
         modelBuilder.Entity<VacancySkill>()
             .HasOne(vs => vs.Skill)
             .WithMany()
@@ -130,11 +133,6 @@ public class ApplicationDatabaseContext : Microsoft.EntityFrameworkCore.DbContex
             .WithMany()
             .HasForeignKey(vls => vls.LanguageSkillId);
 
-        modelBuilder.Entity<Vacancy>()
-            .HasMany(v => v.VacancyPublications)
-            .WithOne(vp => vp.Vacancy)
-            .HasForeignKey(vp => vp.VacancyId);
-
         modelBuilder.Entity<VacancyPublication>()
             .HasOne(vp => vp.Publication)
             .WithMany()
@@ -147,7 +145,10 @@ public class ApplicationDatabaseContext : Microsoft.EntityFrameworkCore.DbContex
             .HasOne(e => e.Location)
             .WithMany()
             .HasForeignKey(e => e.LocationId);
-
+        
+        modelBuilder.Entity<Candidate>()
+            .HasOne(v => v.Education);
+        
         modelBuilder.Entity<Candidate>()
             .HasMany(e => e.CandidateSkills)
             .WithOne(es => es.Candidate)

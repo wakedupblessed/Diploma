@@ -17,30 +17,24 @@ public class SvmPredictionService : ISvmPredictionService
         _options = svmSettings.Value;
     }
 
-    public async Task<string> GetTheMostSuitableCandidates(List<VacancySvmDto> candidates, VacancySvmDto vacancy)
+    public async Task<List<SelectionResult>?> GetTheMostSuitableCandidates(List<VacancySvmDto> candidates,
+        VacancySvmDto vacancy)
     {
-        try
+        var request = new
         {
-            var request = new
-            {
-                candidates, vacancy
-            };
+            candidates, vacancy
+        };
 
-            var jsonRequest = JsonConvert.SerializeObject(request);
-            
-            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+        var jsonRequest = JsonConvert.SerializeObject(request);
 
-            var response = await _httpClient.PostAsync(_options.RequestUrl, content);
+        var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
-            response.EnsureSuccessStatusCode();
+        var response = await _httpClient.PostAsync($"{_options.RequestUrl}/predict", content);
 
-            var jsonResponse = await response.Content.ReadAsStringAsync();
+        response.EnsureSuccessStatusCode();
 
-            return jsonResponse;
-        }
-        catch (Exception ex)
-        {
-            return $"Error: {ex.Message}";
-        }
+        var jsonResponse = await response.Content.ReadAsStringAsync();
+        
+        return JsonConvert.DeserializeObject<List<SelectionResult>>(jsonResponse);
     }
 }

@@ -4,5 +4,5 @@ namespace Diploma.Application.Contracts.Services;
 
 public interface ISvmPredictionService
 {
-    Task<string> GetTheMostSuitableCandidates(List<VacancySvmDto> candidates, VacancySvmDto vacancy);
+    Task<List<SelectionResult>?> GetTheMostSuitableCandidates(List<VacancySvmDto> candidates, VacancySvmDto vacancy);
 }

@@ -5,7 +5,7 @@ namespace Diploma.Domain.Features;
 public class LanguageSkill : BaseEntity
 {
     public required string Name { get; set; }
-    public LanguageLevel Level { get; set; }
+   
 
     public LanguageSkill()
     {

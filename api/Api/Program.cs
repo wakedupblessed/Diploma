@@ -2,10 +2,12 @@ using Diploma.Api.Endpoints;
 using Diploma.Api.Middleware;
 using Diploma.Api.OptionsSetup;
 using Diploma.Application;
+using Diploma.Application.Contracts.Services;
 using Identity;
 using Identity.DbContext;
 using Identity.Models;
 using Infrastructure;
+using Infrastructure.SvmPrediction;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -85,6 +87,11 @@ builder.Services.AddPersistenceServices();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices();
 
+builder.Services.AddHttpClient<ISvmPredictionService, SvmPredictionService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5067");
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -95,9 +102,7 @@ if (app.Environment.IsDevelopment())
 
 using (var scope = app.Services.CreateScope())
 {
-    var administrator = await IdentityDatabaseInitializer.Initialize(scope.ServiceProvider);
-
-    await ApplicationDatabaseInitializer.Initialize(scope.ServiceProvider, administrator);
+    await ApplicationDatabaseInitializer.Initialize(scope.ServiceProvider);
 }
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
@@ -110,5 +115,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.AddAuthenticationEndpoints();
+
+app.AddFeedbackEndpoints();
+
+app.AddVacancyEndpoints();
 
 app.Run();

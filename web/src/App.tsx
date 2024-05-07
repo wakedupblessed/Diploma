@@ -44,6 +44,7 @@ const PageContainer = styled.div`
 
 const PageContent = styled.div`
   flex: 1;
+  background-color: #faf9f6;
 `;
 
 export default App;

@@ -1,13 +1,15 @@
-from flask import Flask, request, jsonify
-import numpy as np
 import joblib
+import numpy as np
+from flask import Flask, request, jsonify
+from sklearn.impute import SimpleImputer
 from data import SvmDTO
-from utils import dict_to_dto, dto_to_features, build_feature_index
+from utils import dto_to_features, build_feature_index
 
 app = Flask(__name__)
 
-scaler = joblib.load('scaler.pkl')
+
 kmeans = joblib.load('kmeans.pkl')
+scaler = joblib.load('scaler.pkl')
 svm = joblib.load('svm.pkl')
 best_weights = joblib.load('weights.pkl')
 
@@ -15,7 +17,6 @@ best_weights = joblib.load('weights.pkl')
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Get candidate and vacancy data from the request
         data = request.json
 
         candidates = data.get('candidates', [])
@@ -23,51 +24,71 @@ def predict():
 
         job_dto = process_vacancy_data(vacancy)
         processed_candidates = process_candidate_data(candidates)
+        candidate_ids, dtos = zip(*processed_candidates)
+        skill_index, language_index, certificate_index, soft_skills_index, education_index = build_feature_index(dtos, job_dto)
 
-        skill_index, language_index, certificate_index = build_feature_index(processed_candidates, job_dto)
+        job_features = dto_to_features(job_dto, job_dto, best_weights, skill_index, language_index, certificate_index, soft_skills_index, education_index)
+        candidate_features = np.array(
+            [dto_to_features(candidate, job_dto, best_weights, skill_index, language_index, certificate_index, soft_skills_index, education_index)
+             for candidate in dtos])
 
-        job_features = dto_to_features(job_dto, job_dto, best_weights, skill_index, language_index, certificate_index)
-        candidate_features = np.array([dto_to_features(candidate, job_dto, best_weights, skill_index, language_index, certificate_index)
-                                       for candidate in processed_candidates])
+        median_imputer = SimpleImputer(strategy='constant', fill_value=0)
+        final_imputed = median_imputer.fit_transform(candidate_features)
 
-        # Scale the features of all candidates
-        candidates_scaled = scaler.transform(candidate_features)
+        candidates_scaled = scaler.fit_transform(final_imputed)
 
-        # Predict the cluster for each candidate
-        candidate_clusters = kmeans.predict(candidates_scaled)
+        kmeans.fit(candidates_scaled)
 
-        # Identify the ideal candidate's cluster
-        ideal_candidate_scaled = scaler.transform([job_features])[0]
+        job_features_reshaped = job_features.reshape(1, -1)
+        ideal_imputed = median_imputer.transform(job_features_reshaped)
+        ideal_scaled = scaler.transform(ideal_imputed)
+
+        cluster_labels = kmeans.labels_
+        svm.fit(candidates_scaled, cluster_labels)
+
+        # Analyze results
         centroids = kmeans.cluster_centers_
+        ideal_candidate_scaled = scaler.transform(ideal_scaled)
         distances = np.linalg.norm(centroids - ideal_candidate_scaled, axis=1)
         closest_cluster = np.argmin(distances)
 
-        # Filter candidates in the closest cluster
-        candidates_in_closest_cluster = np.where(candidate_clusters == closest_cluster)[0]
-        candidates_in_cluster = [processed_candidates[i] for i in candidates_in_closest_cluster]
+        candidate_distances = np.linalg.norm(candidates_scaled - ideal_candidate_scaled, axis=1)
+        max_distance = candidate_distances.max()
 
-        # Prepare the response
-        response = {
-            "closest_cluster": int(closest_cluster),
-            "candidates_in_closest_cluster": candidates_in_cluster
-        }
-        return jsonify(response)
+        # Normalize distances and prepare output
+        candidates_in_closest_cluster = [
+            {
+                "candidate": candidate_ids[i],
+                "MatchScore": 100 * candidate_distances[i] / max_distance
+            }
+            for i, label in enumerate(cluster_labels) if label == closest_cluster
+        ]
+
+        return jsonify(candidates_in_closest_cluster)
     except Exception as e:
         return jsonify({"error": str(e)})
 
 
 def process_vacancy_data(vacancy):
-    required_skills = {skill['name']: skill['level'] for skill in vacancy.get('Skills', [])}
-    language_requirements = {lang['name']: lang['proficiency'] for lang in vacancy.get('LanguageSkills', [])}
+    required_skills = {skill['SkillName']: skill['Level'] for skill in vacancy.get('Skills', [])}
+    language_requirements = {lang['Language']: lang['Proficiency'] for lang in vacancy.get('LanguageSkills', [])}
+    education_info = None
+    if 'Education' in vacancy and vacancy['Education']:
+        education_info = {
+            "Name": vacancy['Education'].get('Name', ''),
+            "Level": vacancy['Education'].get('Level', '')
+        }
 
     job_dto = SvmDTO(
+        description=vacancy.get('Description', ''),
         salary_expectation=vacancy.get('SalaryExpectation', 0),
         city=vacancy.get('City', ''),
         required_experience_years=vacancy.get('ExperienceYears', 0),
         required_skills=required_skills,
         language_requirements=language_requirements,
         publications_required=vacancy.get('Publications', 0),
-        certificates=vacancy.get('Certificates', [])
+        certificates=vacancy.get('Certificates', []),
+        education=education_info
     )
 
     return job_dto
@@ -76,23 +97,34 @@ def process_vacancy_data(vacancy):
 def process_candidate_data(candidates):
     processed_candidates = []
     for candidate_data in candidates:
-        required_skills = {skill['name']: skill['level'] for skill in candidate_data.get('Skills', [])}
-        language_requirements = {lang['name']: lang['proficiency'] for lang in candidate_data.get('LanguageSkills', [])}
+        required_skills = {skill['SkillName']: skill['Level'] for skill in candidate_data.get('Skills', [])}
+        language_requirements = {lang['Language']: lang['Proficiency'] for lang in
+                                 candidate_data.get('LanguageSkills', [])}
+
+        education_info = None
+        if 'Education' in candidate_data and candidate_data['Education']:
+            education_info = {
+                "Name": candidate_data['Education'].get('Name', ''),
+                "Level": candidate_data['Education'].get('Level', '')
+            }
+
         candidate_dto = SvmDTO(
+            description=candidate_data.get('Description', ''),
             salary_expectation=candidate_data.get('SalaryExpectation', 0),
             city=candidate_data.get('City', ''),
             required_experience_years=candidate_data.get('ExperienceYears', 0),
-            required_skills=candidate_data.get('Skills', {}),
-            language_requirements=candidate_data.get('LanguageSkills', {}),
+            required_skills=required_skills,
+            language_requirements=language_requirements,
             publications_required=candidate_data.get('Publications', 0),
-            certificates=candidate_data.get('Certificates', [])
+            certificates=candidate_data.get('Certificates', []),
+            education=education_info
         )
-        processed_candidates.append(candidate_dto)
+
+        candidate_id = candidate_data.get('Id', None)
+        processed_candidates.append((candidate_id, candidate_dto))
 
     return processed_candidates
 
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-
-

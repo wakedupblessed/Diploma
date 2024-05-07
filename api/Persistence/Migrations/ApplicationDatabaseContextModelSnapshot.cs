@@ -29,6 +29,9 @@ namespace Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EducationId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<double>("Experience")
                         .HasColumnType("float");
 
@@ -48,6 +51,8 @@ namespace Persistence.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EducationId");
 
                     b.HasIndex("LocationId");
 
@@ -88,6 +93,9 @@ namespace Persistence.Migrations
                     b.Property<string>("LanguageSkillId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -201,13 +209,27 @@ namespace Persistence.Migrations
                     b.ToTable("Companies");
                 });
 
-            modelBuilder.Entity("Diploma.Domain.Features.LanguageSkill", b =>
+            modelBuilder.Entity("Diploma.Domain.Features.Educations", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Level")
+                    b.Property<int>("RequiredEducationLevel")
                         .HasColumnType("int");
+
+                    b.Property<string>("SpecificFieldOfStudy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Educations");
+                });
+
+            modelBuilder.Entity("Diploma.Domain.Features.LanguageSkill", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -291,12 +313,17 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("RequiredEducationId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("SalaryExpectation")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LocationId");
+
+                    b.HasIndex("RequiredEducationId");
 
                     b.ToTable("Vacancies");
                 });
@@ -331,6 +358,9 @@ namespace Persistence.Migrations
                     b.Property<string>("LanguageSkillId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
 
                     b.Property<string>("VacancyId")
                         .IsRequired()
@@ -394,11 +424,17 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Diploma.Domain.Candidate", b =>
                 {
+                    b.HasOne("Diploma.Domain.Features.Educations", "Education")
+                        .WithMany()
+                        .HasForeignKey("EducationId");
+
                     b.HasOne("Diploma.Domain.Features.Location", "Location")
                         .WithMany()
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Education");
 
                     b.Navigation("Location");
                 });
@@ -517,7 +553,13 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Diploma.Domain.Features.Educations", "RequiredEducation")
+                        .WithMany()
+                        .HasForeignKey("RequiredEducationId");
+
                     b.Navigation("Location");
+
+                    b.Navigation("RequiredEducation");
                 });
 
             modelBuilder.Entity("Diploma.Domain.VacancyRelationships.VacancyCertificate", b =>
@@ -567,7 +609,7 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Diploma.Domain.Vacancy", "Vacancy")
-                        .WithMany("VacancyPublications")
+                        .WithMany()
                         .HasForeignKey("VacancyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -621,8 +663,6 @@ namespace Persistence.Migrations
                     b.Navigation("VacancyCertificates");
 
                     b.Navigation("VacancyLanguageSkills");
-
-                    b.Navigation("VacancyPublications");
 
                     b.Navigation("VacancySkills");
                 });

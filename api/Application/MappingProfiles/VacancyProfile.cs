@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Diploma.Application.Contracts.DTOs;
+using Diploma.Application.Contracts.DTOs.Vacancy;
 using Diploma.Application.Features.Vacancy;
 using Diploma.Domain;
 using Diploma.Domain.VacancyRelationships;
@@ -20,5 +21,7 @@ public class VacancyProfile : Profile
                         Level = skill.Level,
                         VacancyId = src.Id,
                     })));
+        
+        CreateMap<Vacancy, VacancyDTO>();
     }
 }

@@ -18,9 +18,9 @@ public class Vacancy : BaseEntity
     public List<VacancySkill> VacancySkills { get; set; } = new();
     public List<VacancyCertificate> VacancyCertificates { get; set; } = new();
     public List<VacancyLanguageSkill> VacancyLanguageSkills { get; set; } = new();
-    public List<VacancyPublication> VacancyPublications { get; set; } = new();
+    public Educations RequiredEducation { get; set; }
     public List<CandidateVacancy> CandidateVacancies { get; set; } = new();
-
+    
     public Vacancy()
     {
     }

@@ -7,7 +7,9 @@ public class CandidateLanguageSkill : CandidateRelationshipBase
 {
     public required string LanguageSkillId { get; set; }
     public required LanguageSkill LanguageSkill { get; set; }
-
+    
+    public LanguageLevel Level { get; set; }
+    
     public CandidateLanguageSkill()
     {
         

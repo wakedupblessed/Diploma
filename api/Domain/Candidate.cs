@@ -17,7 +17,7 @@ public class Candidate : BaseEntity
     public List<CandidateCertificate> CandidateCertificates { get; set; } = new();
     public List<CandidateLanguageSkill> CandidateLanguageSkills { get; set; } = new();
     public List<CandidatePublication> CandidatePublications { get; set; } = new();
-    
+    public Educations Education { get; set; }
     public List<CandidateVacancy> CandidateVacancies { get; set; } = new();
 
     public Candidate()

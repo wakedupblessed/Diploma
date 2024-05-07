@@ -26,17 +26,17 @@ public static class IdentityDatabaseInitializer
 
     private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
     {
-        string[] roleNames = { "Administrator", "User" };
-        
-        foreach (var roleName in roleNames)
-        {
-            var roleExist = await roleManager.RoleExistsAsync(roleName);
-            
-            if (!roleExist)
-            {
-                await roleManager.CreateAsync(new IdentityRole(roleName));
-            }
-        }
+        // string[] roleNames = { "Administrator", "User" };
+        //
+        // foreach (var roleName in roleNames)
+        // {
+        //     var roleExist = await roleManager.RoleExistsAsync(roleName);
+        //     
+        //     if (!roleExist)
+        //     {
+        //         await roleManager.CreateAsync(new IdentityRole(roleName));
+        //     }
+        // }
     }
 
     private static async Task<ApplicationUser?> SeedTestUserAsync(UserManager<ApplicationUser> userManager)

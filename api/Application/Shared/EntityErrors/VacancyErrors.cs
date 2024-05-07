@@ -2,6 +2,8 @@
 
 public static class VacancyErrors
 {
+    public static Error NotFound(string missingField) =>
+        Error.NotFound("Vacancy.NotFound", $"The vacancy with id '{missingField}' is not exist.");
     public static Error MissingInformation(string missingField) =>
         Error.Validation("Vacancy.MissingInformation", $"The required field '{missingField}' is missing.");
 
@@ -12,11 +14,9 @@ public static class VacancyErrors
         Error.Validation("Vacancy.InvalidLocation", $"The location with Id = {locationId} is not valid.");
     public static Error InvalidSalary() =>
         Error.Validation("Vacancy.InvalidSalary", $"The salary should be greater than zero");
-
     public static Error InvalidExperienceYears() =>
         Error.Validation("Vacancy.InvalidExperienceYears",
             $"The required experience years should be greater or equal to zero");
-
     public static Error InvalidSkillSet() =>
         Error.Validation("Vacancy.InvalidSkillSet", "One or more provided skills are not valid.");
 }
