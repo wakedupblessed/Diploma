@@ -6,7 +6,14 @@ import {
   SelectionResultDTO,
 } from "../../api/vacancy";
 
-import { CandidatesContainer } from "./styles";
+import {
+  CandidatesContainer,
+  CandidateItem,
+  CandidateInfo,
+  ProgressBar,
+  Progress,
+  CandidatesHeader,
+} from "./styles";
 
 interface CandidatesListProps {
   vacancyId: string;
@@ -30,13 +37,28 @@ const CanidatesList = ({ vacancyId }: CandidatesListProps) => {
     getResponse();
   }, []);
 
+  const handleCandidateClick = (candidateId: any) => {
+    navigate(`/candidates/${candidateId}`);
+  };
+
   return (
     <CandidatesContainer>
+      <CandidatesHeader>Most suitable candidates: </CandidatesHeader>
       {candidates &&
         candidates.map(c => (
-          <>
-            {c.name} | {c.matchScore} | {c.yearsOfExperience}
-          </>
+          <CandidateItem
+            key={c.candidate}
+            onClick={() => handleCandidateClick(c.candidate)}
+          >
+            <CandidateInfo>
+              {c.name} - {c.yearsOfExperience} years
+            </CandidateInfo>
+            <ProgressBar>
+              <Progress width={Math.round(c.matchScore)}>
+                {Math.round(c.matchScore)}%
+              </Progress>
+            </ProgressBar>
+          </CandidateItem>
         ))}
     </CandidatesContainer>
   );

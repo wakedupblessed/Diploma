@@ -17,7 +17,7 @@ public class CandidateRepository : GenericRepository<Candidate>, ICandidateRepos
         => await DbSet
             .AsNoTracking()
             .Include(v => v.Location)
-            .Include(v => v.CandidateCertificates).ThenInclude(s => s.Certificate)
+            .Include(v => v.CandidateCertificates).ThenInclude(s => s.Certificate).ThenInclude(s => s.Company)
             .Include(v => v.CandidatePublications).ThenInclude(s => s.Publication)
             .Include(v => v.CandidateLanguageSkills).ThenInclude(s => s.LanguageSkill)
             .Include(v => v.CandidateSkills).ThenInclude(s => s.Skill)

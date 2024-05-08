@@ -120,4 +120,6 @@ app.AddFeedbackEndpoints();
 
 app.AddVacancyEndpoints();
 
+app.AddCandidateEndpoints();
+
 app.Run();

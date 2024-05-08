@@ -40,7 +40,7 @@ job_data = {
   ],
   "education": {
     "level": 2,
-    "field_of_study": "Computer Science"
+    "name": "Computer Science"
   }
 }
 
@@ -70,7 +70,7 @@ candidates = [
     ],
 "education": {
     "level": 2,
-    "field_of_study": "Computer Science"
+    "name": "Computer Science"
   }
   },
   {
@@ -97,7 +97,7 @@ candidates = [
       "IoT Systems Professional"
     ], "education": {
     "level": 2,
-    "field_of_study": "Computer Science"
+    "name": "Computer Science"
   }
   },
   {
@@ -124,7 +124,7 @@ candidates = [
       "IoT Systems Professional"
     ], "education": {
     "level": 2,
-    "field_of_study": "Computer Science"
+    "name": "Computer Science"
   }
   },
   {
@@ -150,7 +150,7 @@ candidates = [
       "Certified Data Scientist"
     ], "education": {
     "level": 2,
-    "field_of_study": "Computer Science"
+    "name": "Computer Science"
   }
   },
   {
@@ -176,7 +176,7 @@ candidates = [
       "Certified Data Scientist"
     ], "education": {
     "level": 2,
-    "field_of_study": "Computer Science"
+    "name": "Computer Science"
   }
   },
   {
@@ -203,7 +203,7 @@ candidates = [
       "Advanced Cyber Security Certification"
     ], "education": {
     "level": 2,
-    "field_of_study": "Computer Science"
+    "name": "Computer Science"
   }
   },
   {
@@ -231,7 +231,7 @@ candidates = [
       "Advanced Cyber Security Certification"
     ], "education": {
     "level": 2,
-    "field_of_study": "Computer Science"
+    "name": "Computer Science"
   }
   },
   {
@@ -258,7 +258,7 @@ candidates = [
       "Certified Data Scientist"
     ] , "education": {
     "level": 2,
-    "field_of_study": "Computer Science"
+    "name": "Computer Science"
   }
   },
   {
@@ -285,7 +285,7 @@ candidates = [
       "Certified Data Scientist"
     ], "education": {
     "level": 2,
-    "field_of_study": "Computer Science"
+    "name": "Computer Science"
   }
   },
   {
@@ -312,7 +312,7 @@ candidates = [
       "Certified Data Scientist"
     ] , "education": {
     "level": 2,
-    "field_of_study": "Computer Science"
+    "name": "Computer Science"
   }
   },
   {
@@ -337,7 +337,7 @@ candidates = [
     "certificates": [] ,
 "education": {
     "level": 1,
-    "field_of_study": "Computer Science"
+    "name": "Computer Science"
   }
   },
   {

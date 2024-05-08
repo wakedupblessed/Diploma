@@ -46,7 +46,25 @@ public static class ApplicationDatabaseInitializer
 
         // await ApplyCandidatesToVacancy(applicationContext);
 
+        // await UpdateJordanTaylor(applicationContext);
+        //
         // await applicationContext.SaveChangesAsync();
+    }
+
+    private static async Task UpdateJordanTaylor(ApplicationDatabaseContext applicationContext)
+    {
+        var candidate = applicationContext.Candidates.FirstOrDefault(v => v.FullName == "Jordan Taylor");
+
+        var eduId = Guid.NewGuid().ToString();
+
+        var education = new Educations
+        {
+            Id = eduId,
+            RequiredEducationLevel = EducationLevel.MastersDegree,
+            SpecificFieldOfStudy = "Energy Systems"
+        };
+
+        candidate.Education = education;
     }
 
     private static async Task ApplyCandidatesToVacancy(ApplicationDatabaseContext applicationContext)

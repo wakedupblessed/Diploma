@@ -10,9 +10,9 @@ public class VacancyDTO
     public double SalaryExpectation { get; set; }
     public int ExperienceYears { get; set; }
     public LocationDTO Location { get; set; }
-    public List<VacancySkillDTO> VacancySkills { get; set; }
-    public List<VacancyCertificateDTO> VacancyCertificates { get; set; }
-    public List<VacancyLanguageSkillDTO> VacancyLanguageSkills { get; set; }
+    public List<SkillDTO> VacancySkills { get; set; }
+    public List<CertificateDTO> VacancyCertificates { get; set; }
+    public List<LanguageSkillDTO> VacancyLanguageSkills { get; set; }
     public EducationDTO Education { get; set; }
 }
 
@@ -21,25 +21,25 @@ public class LocationDTO
     public string Name { get; set; } 
 }
 
-public class VacancySkillDTO
+public class SkillDTO
 {
     public string Name { get; set; } 
     public int Level { get; set; }
 }
 
-public class VacancyCertificateDTO
+public class CertificateDTO
 {
     public string Name { get; set; }
     public string CompanyName { get; set; } 
 }
 
-public class VacancyLanguageSkillDTO
+public class LanguageSkillDTO
 {
     public string Name { get; set; }
     public LanguageLevel Level { get; set; }
 }
 
-public class VacancyPublicationDTO
+public class PublicationDTO
 {
     public string Title { get; set; }
     public string JournalName { get; set; }

@@ -10,6 +10,7 @@ import Articles from "./pages/Articles";
 import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
 import VacancyDetail from "./pages/VacancyDetail";
+import CandidateDetail from "./pages/CandidateDetail";
 
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
@@ -26,6 +27,7 @@ reactRoot.render(
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<RegisterPage />} />
         <Route path="/vacancies/:vacancyId" element={<VacancyDetail />} />
+        <Route path="/candidates/:candidateId" element={<CandidateDetail />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

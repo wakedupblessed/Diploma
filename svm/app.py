@@ -46,6 +46,8 @@ def predict():
         cluster_labels = kmeans.labels_
         svm.fit(candidates_scaled, cluster_labels)
 
+        svm_predicted = svm.predict(candidates_scaled)
+
         # Analyze results
         centroids = kmeans.cluster_centers_
         ideal_candidate_scaled = scaler.transform(ideal_scaled)
@@ -55,13 +57,12 @@ def predict():
         candidate_distances = np.linalg.norm(candidates_scaled - ideal_candidate_scaled, axis=1)
         max_distance = candidate_distances.max()
 
-        # Normalize distances and prepare output
         candidates_in_closest_cluster = [
             {
                 "candidate": candidate_ids[i],
                 "MatchScore": 100 * candidate_distances[i] / max_distance
             }
-            for i, label in enumerate(cluster_labels) if label == closest_cluster
+            for i in range(len(candidate_ids)) if svm_predicted[i] == closest_cluster
         ]
 
         return jsonify(candidates_in_closest_cluster)
@@ -104,8 +105,8 @@ def process_candidate_data(candidates):
         education_info = None
         if 'Education' in candidate_data and candidate_data['Education']:
             education_info = {
-                "Name": candidate_data['Education'].get('Name', ''),
-                "Level": candidate_data['Education'].get('Level', '')
+                "name": candidate_data['Education'].get('Name', ''),
+                "level": candidate_data['Education']['Level']
             }
 
         candidate_dto = SvmDTO(

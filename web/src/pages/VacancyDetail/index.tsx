@@ -17,6 +17,7 @@ import {
   Salary,
   Experience,
   CandidatesContainer,
+  VacancyContainer,
 } from "./styles";
 
 import SectionContainer from "../../components/common/Section";
@@ -55,50 +56,52 @@ const VacancyDetail = () => {
             <HeaderTitle>{vacancy.jobTitle}</HeaderTitle>
           </Header>
           <PageContent>
-            <Title>{vacancy.jobTitle}</Title>
             <CandidatesContainer>
               <CanidatesList vacancyId={vacancy.id} />
             </CandidatesContainer>
-            <VacancyLocation>{vacancy.location.name}</VacancyLocation>
-            <SalaryAndExperienceContainer>
-              <Salary>${vacancy.salaryExpectation}</Salary>
-              <Experience>
-                Experience required: {vacancy.experienceYears} years
-              </Experience>
-            </SalaryAndExperienceContainer>
-            <Text>{vacancy.description}</Text>
-            <Features>
-              {vacancy.vacancySkills && vacancy.vacancySkills.length > 0 && (
-                <SectionContainer
-                  title="Required skills"
-                  element={<Skills data={vacancy.vacancySkills} />}
-                />
-              )}
-              {vacancy.vacancyLanguageSkills &&
-                vacancy.vacancyLanguageSkills.length > 0 && (
+            <VacancyContainer>
+              <Title>{vacancy.jobTitle}</Title>
+              <VacancyLocation>{vacancy.location.name}</VacancyLocation>
+              <SalaryAndExperienceContainer>
+                <Salary>${vacancy.salaryExpectation}</Salary>
+                <Experience>
+                  Experience required: {vacancy.experienceYears} years
+                </Experience>
+              </SalaryAndExperienceContainer>
+              <Text>{vacancy.description}</Text>
+              <Features>
+                {vacancy.vacancySkills && vacancy.vacancySkills.length > 0 && (
                   <SectionContainer
-                    title="Required language skills"
-                    element={
-                      <LanguageSkills data={vacancy.vacancyLanguageSkills} />
-                    }
+                    title="Required skills"
+                    element={<Skills data={vacancy.vacancySkills} />}
                   />
                 )}
-              {vacancy.vacancyCertificates &&
-                vacancy.vacancyCertificates.length > 0 && (
+                {vacancy.vacancyLanguageSkills &&
+                  vacancy.vacancyLanguageSkills.length > 0 && (
+                    <SectionContainer
+                      title="Required language skills"
+                      element={
+                        <LanguageSkills data={vacancy.vacancyLanguageSkills} />
+                      }
+                    />
+                  )}
+                {vacancy.vacancyCertificates &&
+                  vacancy.vacancyCertificates.length > 0 && (
+                    <SectionContainer
+                      title="Required certificates"
+                      element={
+                        <Certificates data={vacancy.vacancyCertificates} />
+                      }
+                    />
+                  )}
+                {vacancy.education && (
                   <SectionContainer
-                    title="Required certificates"
-                    element={
-                      <Certificates data={vacancy.vacancyCertificates} />
-                    }
+                    title="Required education"
+                    element={<Education data={vacancy.education} />}
                   />
                 )}
-              {vacancy.education && (
-                <SectionContainer
-                  title="Required education"
-                  element={<Education data={vacancy.education} />}
-                />
-              )}
-            </Features>
+              </Features>
+            </VacancyContainer>
           </PageContent>
         </>
       )}

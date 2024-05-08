@@ -20,6 +20,13 @@ const Issuer = styled.span`
   color: #666;
 `;
 
+const Doi = styled.div`
+  font-size: 14px;
+  margin: 0;
+  color: #333;
+  font-weight: bold;
+`;
+
 const Publications = ({ data }: CommonProps) => {
   const options = data as PublicationDTO[];
   return (
@@ -27,7 +34,8 @@ const Publications = ({ data }: CommonProps) => {
       {options.map((publication, index) => (
         <CertificateItem key={index}>
           <Title>{publication.title},</Title>
-          <Issuer>{publication.journalName},</Issuer>
+          <Doi>Doi - {publication.doi},</Doi>
+          <Issuer>Journal - {publication.journalName}</Issuer>
         </CertificateItem>
       ))}
     </CertificatesContainer>

@@ -86,10 +86,10 @@ def build_feature_index(candidates, job):
     all_certificates.update(job.certificates)
 
     all_education_qualifications = {
-                                       f"{candidate.education['level']}-{candidate.education['field_of_study']}"
+                                       f"{candidate.education['level']}-{candidate.education['name']}"
                                        for candidate in candidates if candidate.education
                                    } | {
-                                       f"{job.education['level']}-{job.education['field_of_study']}"
+                                       f"{job.education['level']}-{job.education['name']}"
                                        if job.education else None
                                    }
     all_education_qualifications.discard(None)
@@ -133,7 +133,7 @@ def dto_to_features(dto, job_dto, weights, skill_index, language_index, certific
             features[idx] = 1 * weights[idx]
 
     if dto.education:
-        education_qual = f"{dto.education['level']}-{dto.education['field_of_study']}"
+        education_qual = f"{dto.education['level']}-{dto.education['name']}"
         if education_qual in education_index:
             idx = education_index[education_qual]
             features[idx] = 1 * weights[idx]

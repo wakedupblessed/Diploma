@@ -1,49 +1,22 @@
-export interface CreateArticleCommand {
-  title: string;
-  content: string;
-  creatorId: string;
-}
+import {
+  LocationDTO,
+  SkillDTO,
+  CertificateDTO,
+  LanguageSkillDTO,
+  PublicationDTO,
+  EducationDTO,
+} from "../vacancy";
 
-export interface UpdateArticleCommand {
-  id: string;
-  title: string;
-  content: string;
-}
-
-export interface CreateCommentCommand {
-  text: string;
-  commentatorId: string;
-}
-
-export interface ArticleDetailDto {
-  id: string;
-  title: string;
-  content: string;
-  creator: UserDto;
-  comments?: CommentDto[];
-  created: Date;
-  updated: Date;
-}
-
-export interface ArticleDto {
-  id: string;
-  title: string;
-  creator: string;
-  created: Date;
-  updated: Date;
-}
-
-export interface UserDetailDto extends UserDto {
-  articles?: ArticleDto[];
-}
-
-export interface UserDto {
+export interface CandidateDTO {
   id: string;
   fullName: string;
-}
-
-export interface CommentDto {
-  id: string;
-  text: string;
-  commenator: string;
+  description: string;
+  salaryExpectation: number;
+  experience: number;
+  location: LocationDTO;
+  candidateSkills: SkillDTO[];
+  candidateCertificates: CertificateDTO[];
+  candidateLanguageSkills: LanguageSkillDTO[];
+  candidatePublications: PublicationDTO[];
+  education: EducationDTO;
 }
